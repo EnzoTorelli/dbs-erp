@@ -1,0 +1,193 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Segoe UI, Arial, sans-serif;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at top left,#1e3a5f,#000);
+    color: white;
+    overflow: hidden;
+}
+
+/* LOGO */
+
+.logo {
+    width: 140px;
+    height: auto;
+    margin-bottom: 25px;
+    align-self: center;
+}
+
+/* partículas */
+
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: white;
+    opacity: 0.25;
+    border-radius: 50%;
+}
+
+.p1 {
+    top: 10%;
+    left: 15%
+}
+
+.p2 {
+    top: 20%;
+    left: 80%
+}
+
+.p3 {
+    top: 70%;
+    left: 10%
+}
+
+.p4 {
+    top: 85%;
+    left: 60%
+}
+
+.p5 {
+    top: 40%;
+    left: 30%
+}
+
+.p6 {
+    top: 55%;
+    left: 75%
+}
+
+.p7 {
+    top: 25%;
+    left: 50%
+}
+
+.p8 {
+    top: 65%;
+    left: 45%
+}
+
+/* bolhas */
+
+.bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+}
+
+.b1 {
+    width: 300px;
+    height: 300px;
+    top: -100px;
+    left: -100px
+}
+
+.b2 {
+    width: 200px;
+    height: 200px;
+    bottom: -80px;
+    right: -80px
+}
+
+.b3 {
+    width: 150px;
+    height: 150px;
+    top: 60%;
+    left: -60px
+}
+
+.b4 {
+    width: 120px;
+    height: 120px;
+    top: 10%;
+    right: 100px
+}
+
+/* container principal */
+
+.container {
+    width: 900px;
+    height: 520px;
+    display: flex;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    overflow: hidden;
+    z-index: 1;
+}
+
+/* imagem esquerda */
+
+.left {
+    width: 50%;
+    background: url("/imagens/logo.png");
+    background-size: cover;
+    background-position: center;
+}
+
+/* área login */
+
+.right {
+    width: 50%;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+    .right h1 {
+        font-size: 30px;
+        margin-bottom: 10px;
+    }
+
+    .right p {
+        color: #aaa;
+        margin-bottom: 30px;
+    }
+
+.input-box {
+    margin-bottom: 15px;
+}
+
+    .input-box input {
+        width: 100%;
+        padding: 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(255,255,255,0.15);
+        background: rgba(255,255,255,0.05);
+        color: white;
+        outline: none;
+        transition: 0.3s;
+    }
+
+        .input-box input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 10px #3b82f6;
+        }
+
+/* botão */
+
+button {
+    margin-top: 10px;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(90deg,#2563eb,#3b82f6);
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+    button:hover {
+        transform: scale(1.03);
+        box-shadow: 0 0 15px #3b82f6;
+    }
