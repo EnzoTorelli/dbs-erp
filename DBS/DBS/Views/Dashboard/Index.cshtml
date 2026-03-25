@@ -1,0 +1,73 @@
+﻿<h1>
+    Dashboard</h1@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+        <link rel="stylesheet" href="~/css/dashboard.css" />
+}
+
+    <div class="dashboard-header">
+        <h1>Dashboard</h1>
+        <p>Visão geral do sistema</p>
+    </div>
+
+    <div class="cards-grid">
+        <div class="metric-card">
+            <span class="metric-label">Receita do Mês</span>
+            <span class="metric-value">R$ 48.320</span>
+            <span class="metric-delta positivo">↑ 12% em relação ao mês anterior</span>
+        </div>
+        <div class="metric-card">
+            <span class="metric-label">Clientes Ativos</span>
+            <span class="metric-value">1.240</span>
+            <span class="metric-delta positivo">↑ 8 novos hoje</span>
+        </div>
+        <div class="metric-card">
+            <span class="metric-label">Ordens Abertas</span>
+            <span class="metric-value">342</span>
+            <span class="metric-delta negativo">↓ 3 pendentes de ação</span>
+        </div>
+        <div class="metric-card">
+            <span class="metric-label">Produtos em Estoque</span>
+            <span class="metric-value">87</span>
+            <span class="metric-delta positivo">↑ Estoque saudável</span>
+        </div>
+    </div>
+
+    <div class="dashboard-row">
+        <div class="painel">
+            <h3 class="painel-titulo">Últimas Ordens</h3>
+            <table class="tabela">
+                <thead>
+                    <tr>
+                        <th>Pedido</th>
+                        <th>Cliente</th>
+                        <th>Valor</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>#4521</td>
+                        <td>Maria Silva</td>
+                        <td>R$ 320,00</td>
+                        <td><span class="status pago">Pago</span></td>
+                    </tr>
+                    <tr>
+                        <td>#4520</td>
+                        <td>João Pereira</td>
+                        <td>R$ 150,00</td>
+                        <td><span class="status pendente">Pendente</span></td>
+                    </tr>
+                    <tr>
+                        <td>#4519</td>
+                        <td>Ana Costa</td>
+                        <td>R$ 890,00</td>
+                        <td><span class="status pago">Pago</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
