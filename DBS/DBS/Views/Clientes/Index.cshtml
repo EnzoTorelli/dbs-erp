@@ -1,0 +1,175 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Clientes";
+    ViewData["Pagina"] = "Clientes";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/clientes.css" />
+}
+
+<div class="page-wrap">
+
+    <div class="page-header">
+        <div>
+            <h1>Clientes</h1>
+            <span>Gerencie os clientes cadastrados</span>
+        </div>
+        <button class="btn-novo" onclick="abrirModal()">+ Novo Cliente</button>
+    </div>
+
+    <div class="barra-busca">
+        <input type="text" placeholder="Buscar por nome, e-mail ou CPF..." />
+        <select>
+            <option value="">Todos os status</option>
+            <option value="ativo">Ativo</option>
+            <option value="inativo">Inativo</option>
+        </select>
+    </div>
+
+    <div class="painel">
+        <table class="tabela">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Telefone</th>
+                    <th>Cidade</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>001</td>
+                    <td>Maria Silva</td>
+                    <td>maria@email.com</td>
+                    <td>(11) 99999-1111</td>
+                    <td>São Paulo</td>
+                    <td><span class="status ativo">Ativo</span></td>
+                    <td>
+                        <button class="btn-acao editar">Editar</button>
+                        <button class="btn-acao excluir">Excluir</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>002</td>
+                    <td>João Pereira</td>
+                    <td>joao@email.com</td>
+                    <td>(11) 99999-2222</td>
+                    <td>Campinas</td>
+                    <td><span class="status ativo">Ativo</span></td>
+                    <td>
+                        <button class="btn-acao editar">Editar</button>
+                        <button class="btn-acao excluir">Excluir</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>003</td>
+                    <td>Ana Costa</td>
+                    <td>ana@email.com</td>
+                    <td>(11) 99999-3333</td>
+                    <td>Santos</td>
+                    <td><span class="status inativo">Inativo</span></td>
+                    <td>
+                        <button class="btn-acao editar">Editar</button>
+                        <button class="btn-acao excluir">Excluir</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>004</td>
+                    <td>Carlos Lima</td>
+                    <td>carlos@email.com</td>
+                    <td>(11) 99999-4444</td>
+                    <td>Sorocaba</td>
+                    <td><span class="status ativo">Ativo</span></td>
+                    <td>
+                        <button class="btn-acao editar">Editar</button>
+                        <button class="btn-acao excluir">Excluir</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>005</td>
+                    <td>Paula Souza</td>
+                    <td>paula@email.com</td>
+                    <td>(11) 99999-5555</td>
+                    <td>Jundiaí</td>
+                    <td><span class="status ativo">Ativo</span></td>
+                    <td>
+                        <button class="btn-acao editar">Editar</button>
+                        <button class="btn-acao excluir">Excluir</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<!-- Modal de Cadastro -->
+<div class="modal-overlay" id="modalCliente">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>Novo Cliente</h2>
+            <button class="modal-fechar" onclick="fecharModal()">×</button>
+        </div>
+
+        <div class="form-grupo">
+            <label>Nome completo</label>
+            <input type="text" placeholder="Ex: Maria Silva" />
+        </div>
+
+        <div class="form-linha">
+            <div class="form-grupo">
+                <label>CPF</label>
+                <input type="text" placeholder="000.000.000-00" />
+            </div>
+            <div class="form-grupo">
+                <label>Telefone</label>
+                <input type="text" placeholder="(00) 00000-0000" />
+            </div>
+        </div>
+
+        <div class="form-grupo">
+            <label>E-mail</label>
+            <input type="email" placeholder="email@exemplo.com" />
+        </div>
+
+        <div class="form-linha">
+            <div class="form-grupo">
+                <label>Cidade</label>
+                <input type="text" placeholder="Ex: São Paulo" />
+            </div>
+            <div class="form-grupo">
+                <label>Status</label>
+                <select>
+                    <option value="ativo">Ativo</option>
+                    <option value="inativo">Inativo</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+            <button class="btn-salvar">Salvar Cliente</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function abrirModal() {
+            document.getElementById('modalCliente').classList.add('aberto');
+        }
+
+        function fecharModal() {
+            document.getElementById('modalCliente').classList.remove('aberto');
+        }
+
+        // Fecha o modal clicando fora
+        document.getElementById('modalCliente').addEventListener('click', function(e) {
+            if (e.target === this) fecharModal();
+        });
+    </script>
+}

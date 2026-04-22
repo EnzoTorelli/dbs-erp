@@ -1,0 +1,193 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Produtos";
+    ViewData["Pagina"] = "Produtos";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/produtos.css" />
+}
+
+<div class="page-wrap">
+
+    <div class="page-header">
+        <div>
+            <h1>Produtos</h1>
+            <span>Gerencie o catálogo de produtos</span>
+        </div>
+        <button class="btn-novo" onclick="abrirModal()">+ Novo Produto</button>
+    </div>
+
+    <div class="barra-busca">
+        <input type="text" placeholder="Buscar por nome ou código..." />
+        <select>
+            <option value="">Todas as categorias</option>
+            <option value="eletronicos">Eletrônicos</option>
+            <option value="roupas">Roupas</option>
+            <option value="casa">Casa</option>
+            <option value="outros">Outros</option>
+        </select>
+        <select>
+            <option value="">Todos os status</option>
+            <option value="disponivel">Disponível</option>
+            <option value="indisponivel">Indisponível</option>
+            <option value="baixo-estoque">Baixo Estoque</option>
+        </select>
+    </div>
+
+    <div class="painel">
+        <table class="tabela">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Nome</th>
+                    <th>Categoria</th>
+                    <th>Preço</th>
+                    <th>Estoque</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>PRD-001</td>
+                    <td>Notebook Dell Inspiron</td>
+                    <td>Eletrônicos</td>
+                    <td>R$ 3.200,00</td>
+                    <td>12</td>
+                    <td><span class="status disponivel">Disponível</span></td>
+                    <td>
+                        <button class="btn-acao editar">Editar</button>
+                        <button class="btn-acao excluir">Excluir</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>PRD-002</td>
+                    <td>Mouse Logitech MX</td>
+                    <td>Eletrônicos</td>
+                    <td>R$ 280,00</td>
+                    <td class="estoque-baixo">3</td>
+                    <td><span class="status baixo-estoque">Baixo Estoque</span></td>
+                    <td>
+                        <button class="btn-acao editar">Editar</button>
+                        <button class="btn-acao excluir">Excluir</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>PRD-003</td>
+                    <td>Camiseta Polo</td>
+                    <td>Roupas</td>
+                    <td>R$ 89,90</td>
+                    <td>45</td>
+                    <td><span class="status disponivel">Disponível</span></td>
+                    <td>
+                        <button class="btn-acao editar">Editar</button>
+                        <button class="btn-acao excluir">Excluir</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>PRD-004</td>
+                    <td>Cadeira Ergonômica</td>
+                    <td>Casa</td>
+                    <td>R$ 1.450,00</td>
+                    <td>0</td>
+                    <td><span class="status indisponivel">Indisponível</span></td>
+                    <td>
+                        <button class="btn-acao editar">Editar</button>
+                        <button class="btn-acao excluir">Excluir</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>PRD-005</td>
+                    <td>Monitor Samsung 24"</td>
+                    <td>Eletrônicos</td>
+                    <td>R$ 1.100,00</td>
+                    <td>8</td>
+                    <td><span class="status disponivel">Disponível</span></td>
+                    <td>
+                        <button class="btn-acao editar">Editar</button>
+                        <button class="btn-acao excluir">Excluir</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<!-- Modal de Cadastro -->
+<div class="modal-overlay" id="modalProduto">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>Novo Produto</h2>
+            <button class="modal-fechar" onclick="fecharModal()">×</button>
+        </div>
+
+        <div class="form-linha">
+            <div class="form-grupo">
+                <label>Código</label>
+                <input type="text" placeholder="Ex: PRD-006" />
+            </div>
+            <div class="form-grupo">
+                <label>Categoria</label>
+                <select>
+                    <option value="">Selecione...</option>
+                    <option value="eletronicos">Eletrônicos</option>
+                    <option value="roupas">Roupas</option>
+                    <option value="casa">Casa</option>
+                    <option value="outros">Outros</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-grupo">
+            <label>Nome do Produto</label>
+            <input type="text" placeholder="Ex: Notebook Dell Inspiron" />
+        </div>
+
+        <div class="form-grupo">
+            <label>Descrição</label>
+            <textarea placeholder="Descreva o produto..."></textarea>
+        </div>
+
+        <div class="form-linha">
+            <div class="form-grupo">
+                <label>Preço (R$)</label>
+                <input type="number" placeholder="0,00" step="0.01" />
+            </div>
+            <div class="form-grupo">
+                <label>Quantidade em Estoque</label>
+                <input type="number" placeholder="0" />
+            </div>
+        </div>
+
+        <div class="form-grupo">
+            <label>Status</label>
+            <select>
+                <option value="disponivel">Disponível</option>
+                <option value="indisponivel">Indisponível</option>
+            </select>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+            <button class="btn-salvar">Salvar Produto</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function abrirModal() {
+            document.getElementById('modalProduto').classList.add('aberto');
+        }
+
+        function fecharModal() {
+            document.getElementById('modalProduto').classList.remove('aberto');
+        }
+
+        document.getElementById('modalProduto').addEventListener('click', function(e) {
+            if (e.target === this) fecharModal();
+        });
+    </script>
+}
