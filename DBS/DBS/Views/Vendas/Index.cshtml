@@ -1,0 +1,115 @@
+﻿@model List<DBS.Controllers.Venda>
+
+@{
+    ViewData["Title"] = "Vendas";
+    ViewData["Pagina"] = "Vendas";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/vendas.css" />
+}
+
+<div class="page-wrap">
+
+    <div class="page-header">
+        <div>
+            <h1>Vendas</h1>
+            <span>Controle de vendas realizadas</span>
+        </div>
+        <button class="btn-novo" onclick="abrirModal()">+ Nova Venda</button>
+    </div>
+
+    <div class="barra-busca">
+        <input type="text" placeholder="Buscar cliente..." />
+        <select>
+            <option value="">Todos</option>
+            <option value="pago">Pago</option>
+            <option value="pendente">Pendente</option>
+        </select>
+    </div>
+
+    <div class="painel">
+        <table class="tabela">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Cliente</th>
+                    <th>Valor</th>
+                    <th>Data</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var venda in Model)
+                {
+                    <tr>
+                        <td>#@venda.Id</td>
+                        <td>@venda.ClienteNome</td>
+                        <td>R$ @venda.Valor</td>
+                        <td>@venda.Data.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            <span class="status @(venda.Status == "Pago" ? "pago" : "pendente")">
+                                @venda.Status
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn-acao editar">Editar</button>
+                            <button class="btn-acao excluir">Excluir</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<!-- Modal de Cadastro -->
+<div class="modal-overlay" id="modalVenda">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>Nova Venda</h2>
+            <button class="modal-fechar" onclick="fecharModal()">×</button>
+        </div>
+
+        <div class="form-grupo">
+            <label>Cliente</label>
+            <input type="text" placeholder="Nome do cliente" />
+        </div>
+
+        <div class="form-grupo">
+            <label>Valor</label>
+            <input type="number" placeholder="0,00" />
+        </div>
+
+        <div class="form-grupo">
+            <label>Status</label>
+            <select>
+                <option value="pendente">Pendente</option>
+                <option value="pago">Pago</option>
+            </select>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+            <button class="btn-salvar">Salvar Venda</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function abrirModal() {
+            document.getElementById('modalVenda').classList.add('aberto');
+        }
+
+        function fecharModal() {
+            document.getElementById('modalVenda').classList.remove('aberto');
+        }
+
+        document.getElementById('modalVenda').addEventListener('click', function (e) {
+            if (e.target === this) fecharModal();
+        });
+    </script>
+}

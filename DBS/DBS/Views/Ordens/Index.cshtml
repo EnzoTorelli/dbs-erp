@@ -1,0 +1,115 @@
+﻿@model List<DBS.Controllers.Ordem>
+
+@{
+    ViewData["Title"] = "Ordens";
+    ViewData["Pagina"] = "Ordens";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/ordens.css" />
+}
+
+<div class="page-wrap">
+
+    <div class="page-header">
+        <div>
+            <h1>Ordens</h1>
+            <span>Gerenciamento de pedidos</span>
+        </div>
+        <button class="btn-novo" onclick="abrirModal()">+ Nova Ordem</button>
+    </div>
+
+    <div class="barra-busca">
+        <input type="text" placeholder="Buscar pedido..." />
+        <select>
+            <option value="">Todos</option>
+            <option value="pendente">Pendente</option>
+            <option value="pago">Pago</option>
+            <option value="cancelado">Cancelado</option>
+        </select>
+    </div>
+
+    <div class="painel">
+        <table class="tabela">
+            <thead>
+                <tr>
+                    <th>Pedido</th>
+                    <th>Cliente</th>
+                    <th>Valor</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var ordem in Model)
+                {
+                    <tr>
+                        <td>#@ordem.Id</td>
+                        <td>@ordem.ClienteNome</td>
+                        <td>R$ @ordem.Valor</td>
+                        <td>
+                            <span class="status @(ordem.Status.ToLower())">
+                                @ordem.Status
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn-acao editar">Editar</button>
+                            <button class="btn-acao excluir">Excluir</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<!-- Modal de Cadastro -->
+<div class="modal-overlay" id="modalOrdem">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>Nova Ordem</h2>
+            <button class="modal-fechar" onclick="fecharModal()">×</button>
+        </div>
+
+        <div class="form-grupo">
+            <label>Cliente</label>
+            <input type="text" placeholder="Nome do cliente" />
+        </div>
+
+        <div class="form-grupo">
+            <label>Valor</label>
+            <input type="number" placeholder="0,00" />
+        </div>
+
+        <div class="form-grupo">
+            <label>Status</label>
+            <select>
+                <option value="pendente">Pendente</option>
+                <option value="pago">Pago</option>
+                <option value="cancelado">Cancelado</option>
+            </select>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+            <button class="btn-salvar">Salvar Ordem</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function abrirModal() {
+            document.getElementById('modalOrdem').classList.add('aberto');
+        }
+
+        function fecharModal() {
+            document.getElementById('modalOrdem').classList.remove('aberto');
+        }
+
+        document.getElementById('modalOrdem').addEventListener('click', function (e) {
+            if (e.target === this) fecharModal();
+        });
+    </script>
+}
