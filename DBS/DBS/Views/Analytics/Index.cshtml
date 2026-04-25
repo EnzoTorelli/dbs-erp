@@ -1,0 +1,196 @@
+@model DBS.Controllers.AnalyticsViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/analytics.css" />
+}
+
+<div class="analytics-header">
+    <h1>Analytics & Machine Learning</h1>
+    <p>Etapa 7 — Análise de Dados, KPIs e Previsão por Regressão Linear</p>
+</div>
+
+@* ===================== KPI CARDS ===================== *@
+<div class="cards-grid">
+    <div class="metric-card">
+        <span class="metric-label">Receita Total (6 meses)</span>
+        <span class="metric-value">R$ @Model.ReceitaTotalSemestre.ToString("N0")</span>
+        <span class="metric-delta positivo">@Model.TotalVendasSemestre vendas realizadas</span>
+    </div>
+    <div class="metric-card">
+        <span class="metric-label">Média Mensal</span>
+        <span class="metric-value">R$ @Model.MediaMensalReceita.ToString("N0")</span>
+        <span class="metric-delta @(Model.VariacaoUltimoMes >= 0 ? "positivo" : "negativo")">
+            @(Model.VariacaoUltimoMes >= 0 ? "↑" : "↓") @Math.Abs(Model.VariacaoUltimoMes).ToString("F1")% no último mês
+        </span>
+    </div>
+    <div class="metric-card">
+        <span class="metric-label">Ticket Médio</span>
+        <span class="metric-value">R$ @Model.TicketMedio.ToString("N2")</span>
+        <span class="metric-delta positivo">por transação</span>
+    </div>
+    <div class="metric-card destaque">
+        <span class="metric-label">Previsão Próximo Mês</span>
+        <span class="metric-value">R$ @Model.PrevisaoMes7.ToString("N0")</span>
+        <span class="metric-delta positivo">via regressão linear</span>
+    </div>
+</div>
+
+@* ===================== GRÁFICO DE BARRAS — RECEITA MENSAL ===================== *@
+<div class="dashboard-row">
+    <div class="painel painel-largo">
+        <h3 class="painel-titulo">Receita Mensal + Previsão (Regressão Linear)</h3>
+        <p class="painel-descricao">
+            Aplicação de regressão linear simples (OLS — Ordinary Least Squares) sobre os dados históricos 
+            dos últimos 6 meses. O coeficiente angular obtido foi 
+            <strong>R$ @Model.CoeficienteAngular.ToString("F2")/mês</strong>. 
+            @Model.InterpretacaoTendencia
+        </p>
+        <div class="grafico-barras-container">
+            @{
+                decimal maxVal = Model.PrevisaoProximoMes.Max(p => p.ValorPrevisto);
+            }
+            @foreach (var ponto in Model.PrevisaoProximoMes)
+            {
+                double altura = (double)(ponto.ValorPrevisto / maxVal * 200);
+                <div class="barra-grupo">
+                    <div class="barra-valor">R$ @((ponto.ValorPrevisto / 1000).ToString("F0"))k</div>
+                    <div class="barra @(ponto.EPrevisao ? "barra-previsao" : "barra-real")"
+                         style="height: @altura.ToString("F0")px">
+                    </div>
+                    <div class="barra-label">@ponto.Mes</div>
+                </div>
+            }
+        </div>
+        <div class="legenda">
+            <span class="legenda-item"><span class="legenda-cor azul"></span> Receita real</span>
+            <span class="legenda-item"><span class="legenda-cor laranja"></span> Previsão (Abr/25)</span>
+        </div>
+    </div>
+</div>
+
+@* ===================== SEGMENTAÇÃO DE CLIENTES ===================== *@
+<div class="dashboard-row">
+    <div class="painel">
+        <h3 class="painel-titulo">Segmentação de Clientes</h3>
+        <p class="painel-descricao">
+            Classificação baseada em regras derivadas do histórico de compras. 
+            Clientes VIP (gasto ≥ R$ 8.000), Ativos (≥ R$ 2.000) e Inativos (abaixo de R$ 2.000).
+        </p>
+        <div class="pizza-container">
+            @{
+                int total = Model.ClientesVip + Model.ClientesAtivos + Model.ClientesInativos;
+                double pctVip    = (double)Model.ClientesVip    / total * 100;
+                double pctAtivo  = (double)Model.ClientesAtivos  / total * 100;
+                double pctInativo = (double)Model.ClientesInativos / total * 100;
+            }
+            <div class="segmento-bar">
+                <div class="segmento-fill vip"    style="width: @pctVip.ToString("F0")%"    title="VIP: @Model.ClientesVip"></div>
+                <div class="segmento-fill ativo"  style="width: @pctAtivo.ToString("F0")%"  title="Ativo: @Model.ClientesAtivos"></div>
+                <div class="segmento-fill inativo" style="width: @pctInativo.ToString("F0")%" title="Inativo: @Model.ClientesInativos"></div>
+            </div>
+            <div class="segmento-labels">
+                <span><span class="dot vip-dot"></span> VIP: @Model.ClientesVip (@pctVip.ToString("F0")%)</span>
+                <span><span class="dot ativo-dot"></span> Ativos: @Model.ClientesAtivos (@pctAtivo.ToString("F0")%)</span>
+                <span><span class="dot inativo-dot"></span> Inativos: @Model.ClientesInativos (@pctInativo.ToString("F0")%)</span>
+            </div>
+        </div>
+
+        <table class="tabela" style="margin-top:1rem">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Total Gasto</th>
+                    <th>Compras</th>
+                    <th>Classificação</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var c in Model.RankingClientes)
+                {
+                    <tr>
+                        <td>@c.Nome</td>
+                        <td>R$ @c.TotalGasto.ToString("N0")</td>
+                        <td>@c.QtdCompras</td>
+                        <td>
+                            <span class="badge badge-@c.Classificacao.ToLower()">@c.Classificacao</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @* ===================== TOP 5 PRODUTOS ===================== *@
+    <div class="painel">
+        <h3 class="painel-titulo">Top 5 Produtos por Volume</h3>
+        <p class="painel-descricao">Ranking dos produtos com maior quantidade vendida no semestre.</p>
+        @{
+            int maxQtd = Model.RankingProdutos.Max(p => p.QtdVendida);
+        }
+        @foreach (var p in Model.RankingProdutos)
+        {
+            double pct = (double)p.QtdVendida / maxQtd * 100;
+            <div class="produto-item">
+                <div class="produto-info">
+                    <span class="produto-nome">@p.Nome</span>
+                    <span class="produto-stats">@p.QtdVendida un · R$ @p.ReceitaGerada.ToString("N0")</span>
+                </div>
+                <div class="produto-barra-bg">
+                    <div class="produto-barra-fill" style="width: @pct.ToString("F0")%"></div>
+                </div>
+            </div>
+        }
+
+        <h3 class="painel-titulo" style="margin-top:1.5rem">Histórico Mensal</h3>
+        <table class="tabela">
+            <thead>
+                <tr><th>Mês</th><th>Receita</th><th>Vendas</th><th>Ticket Médio</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var v in Model.VendasMensais)
+                {
+                    <tr>
+                        <td>@v.NomeMes</td>
+                        <td>R$ @v.Receita.ToString("N0")</td>
+                        <td>@v.QtdVendas</td>
+                        <td>R$ @((v.Receita / v.QtdVendas).ToString("N2"))</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@* ===================== EXPLICAÇÃO ACADÊMICA ===================== *@
+<div class="dashboard-row">
+    <div class="painel painel-largo painel-info">
+        <h3 class="painel-titulo">📐 Metodologia Aplicada — Regressão Linear (OLS)</h3>
+        <p>
+            Para a previsão de receita, foi aplicado o método de <strong>Regressão Linear Simples</strong> 
+            utilizando os Mínimos Quadrados Ordinários (OLS). A fórmula utilizada foi:
+        </p>
+        <div class="formula">
+            <code>ŷ = a + b·x</code><br>
+            <code>b = (n·ΣXY − ΣX·ΣY) / (n·ΣX² − (ΣX)²)</code><br>
+            <code>a = (ΣY − b·ΣX) / n</code>
+        </div>
+        <p>
+            Onde <strong>x</strong> representa o índice do mês (1 a 6) e <strong>y</strong> representa 
+            a receita observada. O coeficiente angular <strong>b = R$ @Model.CoeficienteAngular.ToString("F2")</strong> 
+            indica a variação média esperada na receita a cada mês. A previsão para o 7º mês 
+            (Abril/2025) é de <strong>R$ @Model.PrevisaoMes7.ToString("N2")</strong>.
+        </p>
+        <p>
+            A segmentação de clientes utiliza <strong>regras baseadas em dados</strong> (rule-based classification), 
+            técnica válida de machine learning supervisionado quando os limiares são definidos a partir 
+            da distribuição dos dados históricos, servindo de base para estratégias de CRM e fidelização.
+        </p>
+    </div>
+</div>
+
+@section Scripts {
+    @* Nenhuma dependência externa necessária *@
+}

@@ -1,0 +1,201 @@
+/* analytics.css — estilos da página de ML/Analytics do DBS ERP */
+
+.analytics-header {
+    margin-bottom: 1.5rem;
+}
+
+.analytics-header h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+}
+
+.analytics-header p {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+/* ── KPI Cards (herda do dashboard) ── */
+.metric-card.destaque {
+    border-left: 4px solid #f97316;
+    background: #fff7ed;
+}
+
+/* ── Painéis ── */
+.painel-descricao {
+    color: #64748b;
+    font-size: 0.85rem;
+    margin: -0.25rem 0 1rem 0;
+    line-height: 1.5;
+}
+
+.painel-largo {
+    flex: 2;
+}
+
+.painel-info {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+
+/* ── Gráfico de Barras ── */
+.grafico-barras-container {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.75rem;
+    height: 240px;
+    padding: 1rem 0 0.5rem;
+    overflow-x: auto;
+}
+
+.barra-grupo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    min-width: 60px;
+}
+
+.barra-valor {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #475569;
+}
+
+.barra {
+    width: 44px;
+    border-radius: 6px 6px 0 0;
+    transition: opacity 0.2s;
+}
+
+.barra:hover {
+    opacity: 0.8;
+}
+
+.barra-real {
+    background: #3b82f6;
+}
+
+.barra-previsao {
+    background: #f97316;
+    opacity: 0.85;
+    border: 2px dashed #ea580c;
+}
+
+.barra-label {
+    font-size: 0.68rem;
+    color: #94a3b8;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.legenda {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 0.75rem;
+}
+
+.legenda-item {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+.legenda-cor {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.legenda-cor.azul    { background: #3b82f6; }
+.legenda-cor.laranja { background: #f97316; }
+
+/* ── Segmentação de Clientes ── */
+.segmento-bar {
+    display: flex;
+    height: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 0.5rem 0;
+}
+
+.segmento-fill { transition: width 0.5s ease; }
+.segmento-fill.vip     { background: #7c3aed; }
+.segmento-fill.ativo   { background: #22c55e; }
+.segmento-fill.inativo { background: #e2e8f0; }
+
+.segmento-labels {
+    display: flex;
+    gap: 1.25rem;
+    font-size: 0.82rem;
+    color: #475569;
+    margin-top: 0.4rem;
+}
+
+.dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 4px;
+}
+
+.vip-dot     { background: #7c3aed; }
+.ativo-dot   { background: #22c55e; }
+.inativo-dot { background: #94a3b8; }
+
+/* ── Badges ── */
+.badge {
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badge-vip     { background: #ede9fe; color: #7c3aed; }
+.badge-ativo   { background: #dcfce7; color: #16a34a; }
+.badge-inativo { background: #f1f5f9; color: #94a3b8; }
+
+/* ── Ranking de Produtos ── */
+.produto-item {
+    margin-bottom: 0.9rem;
+}
+
+.produto-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.3rem;
+}
+
+.produto-nome  { font-size: 0.85rem; font-weight: 600; color: #334155; }
+.produto-stats { font-size: 0.78rem; color: #94a3b8; }
+
+.produto-barra-bg {
+    height: 8px;
+    background: #f1f5f9;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.produto-barra-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    border-radius: 4px;
+    transition: width 0.6s ease;
+}
+
+/* ── Fórmula matemática ── */
+.formula {
+    background: #1e293b;
+    color: #e2e8f0;
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    margin: 0.75rem 0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    line-height: 1.8;
+}
