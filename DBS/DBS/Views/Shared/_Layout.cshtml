@@ -1,20 +1,37 @@
 ﻿<!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" data-fonte="2">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] — DBS</title>
+
+    <script>
+            (function () {
+                try {
+                    var html = document.documentElement;
+                    if (localStorage.getItem('acess_escuro') === 'true') html.setAttribute('data-tema', 'escuro');
+                    if (localStorage.getItem('acess_contraste') === 'true') html.setAttribute('data-contraste', 'ativo');
+                    html.setAttribute('data-fonte', localStorage.getItem('acess_fonte') || '2');
+                } catch (_) {}
+            })();
+    </script>
+
+    <link rel="stylesheet" href="~/css/acessibilidade.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/sidebar.css" />
     @await RenderSectionAsync("Styles", required: false)
 </head>
+
 <body>
+
+    @await Html.PartialAsync("_BarraAcessibilidade")
+
     <div class="container-geral">
 
         <div class="sidebar">
             <div class="sidebar-brand">
-                <h2>DBS</h2>
-                <small>Sistema de Gestão</small>
+                <img src="~/imagens/logo3.png" alt="DBS" class="sidebar-logo" />
+                <span class="sidebar-sistema">Sistema de Gestão</span>
             </div>
 
             <nav>
@@ -69,7 +86,7 @@
             </div>
         </div>
 
-        <div class="conteudo">
+        <div class="conteudo" id="conteudo-principal">
             @RenderBody()
         </div>
 
@@ -77,6 +94,8 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/acessibilidade.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

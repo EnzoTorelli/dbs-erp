@@ -1,0 +1,67 @@
+<!-- Barra de Acessibilidade eMAG — colapsável, canto superior direito -->
+<div id="barra-acessibilidade" role="navigation" aria-label="Barra de Acessibilidade">
+
+    <a class="skip-link" href="#conteudo-principal" accesskey="1">Ir ao conteúdo [1]</a>
+    <a class="skip-link" href="#menu-principal" accesskey="2">Ir ao menu [2]</a>
+
+    <!-- Botão gatilho — sempre visível -->
+    <button class="acess-toggle" id="btn-acess-toggle"
+            onclick="toggleAcessibilidade()"
+            aria-expanded="false"
+            aria-controls="acess-painel"
+            aria-label="Abrir opções de acessibilidade"
+            title="Acessibilidade">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <circle cx="12" cy="4.5" r="2.5"/>
+            <path d="M12 8c-2.8 0-4.5 1.4-4.5 3.5h2C9.5 10.4 10.6 10 12 10s2.5.4 2.5 1.5h2C16.5 9.4 14.8 8 12 8Z"/>
+            <path d="M9 13.5l-1.8 5.5h2l1.3-4 1 1.2V22h2v-5.8l-1.8-2 .3-.7"/>
+            <path d="M10.5 13.5h3l.8-2.5H9.7l.8 2.5Z"/>
+        </svg>
+        Acessibilidade
+        <svg class="acess-toggle-chevron" width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </button>
+
+    <!-- Painel com as opções — oculto por padrão -->
+    <div class="acess-painel" id="acess-painel" aria-hidden="true">
+
+        <div class="acess-painel-grupo">
+            <span class="acess-painel-label">Tamanho do texto</span>
+            <div class="acess-painel-controles">
+                <button class="acess-btn" id="btn-diminuir" onclick="alterarFonte(-1)"
+                        aria-label="Diminuir texto" title="Diminuir texto">A-</button>
+                <button class="acess-btn acess-btn-a" onclick="resetarFonte()"
+                        aria-label="Tamanho padrão" title="Tamanho padrão">A</button>
+                <button class="acess-btn" id="btn-aumentar" onclick="alterarFonte(1)"
+                        aria-label="Aumentar texto" title="Aumentar texto">A+</button>
+            </div>
+        </div>
+
+        <div class="acess-painel-sep"></div>
+
+        <div class="acess-painel-grupo">
+            <span class="acess-painel-label">Visualização</span>
+            <div class="acess-painel-controles">
+                <button class="acess-btn acess-btn-wide" id="btn-contraste"
+                        onclick="alternarContraste()"
+                        aria-label="Alto contraste" title="Alto contraste" aria-pressed="false">
+                    <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true" fill="none">
+                        <circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M7 1a6 6 0 0 1 0 12V1Z" fill="currentColor"/>
+                    </svg>
+                    Contraste
+                </button>
+                <button class="acess-btn acess-btn-wide" id="btn-escuro"
+                        onclick="alternarModoEscuro()"
+                        aria-label="Modo escuro" title="Modo escuro" aria-pressed="false">
+                    <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true" fill="currentColor">
+                        <path id="path-tema" d="M12 8.5A5.5 5.5 0 0 1 5.5 2a5.5 5.5 0 1 0 6.5 6.5Z"/>
+                    </svg>
+                    <span id="label-tema">Modo Escuro</span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>

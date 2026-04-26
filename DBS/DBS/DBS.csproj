@@ -21,8 +21,4 @@
     <None Remove="wwwroot\NewFolder2\**" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\imagens\" />
-  </ItemGroup>
-
 </Project>
