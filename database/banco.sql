@@ -72,4 +72,20 @@ CREATE TABLE `item_pedido` (
   PRIMARY KEY (`id`)
 );
 
+ALTER TABLE `produto`
+ADD CONSTRAINT `fk_produto_categoria`
+FOREIGN KEY (`id_categoria`) REFERENCES `categoria`(`id`);
+
+ALTER TABLE `pedido`
+ADD CONSTRAINT `fk_pedido_cliente`
+FOREIGN KEY (`id_cliente`) REFERENCES `cliente`(`id`);
+
+ALTER TABLE `item_pedido`
+ADD CONSTRAINT `fk_item_pedido_pedido`
+FOREIGN KEY (`id_pedido`) REFERENCES `pedido`(`id`);
+
+ALTER TABLE `item_pedido`
+ADD CONSTRAINT `fk_item_pedido_produto`
+FOREIGN KEY (`id_produto`) REFERENCES `produto`(`id`);
+
 SET FOREIGN_KEY_CHECKS=1;
