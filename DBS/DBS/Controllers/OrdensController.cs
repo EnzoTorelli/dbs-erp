@@ -1,27 +1,34 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+using DBS.Repositories;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DBS.Controllers
 {
     public class OrdensController : Controller
     {
+        private readonly PedidoRepository _repo;
+
+        public OrdensController(PedidoRepository repo)
+        {
+            _repo = repo;
+        }
+
         public IActionResult Index()
         {
-            var ordens = new List<Ordem>
-            {
-                new Ordem { Id = 4521, ClienteNome = "Ana Costa", Valor = 890, Status = "Pago" },
-                new Ordem { Id = 4520, ClienteNome = "Carlos Souza", Valor = 120, Status = "Pendente" }
-            };
+            if (HttpContext.Session.GetString("Usuario") == null)
+                return RedirectToAction("Index", "Login");
 
+            ViewData["Title"] = "Ordens";
+            ViewData["Pagina"] = "Ordens";
+
+            var ordens = _repo.GetAll();
             return View(ordens);
         }
-    }
 
-    public class Ordem
-    {
-        public int Id { get; set; }
-        public string ClienteNome { get; set; }
-        public decimal Valor { get; set; }
-        public string Status { get; set; }
+        [HttpPost]
+        public IActionResult Excluir(int id)
+        {
+            _repo.Delete(id);
+            return RedirectToAction("Index");
+        }
     }
 }

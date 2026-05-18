@@ -1,5 +1,4 @@
-﻿@model List<DBS.Controllers.Venda>
-
+@model List<DBS.Models.Pedido>
 @{
     ViewData["Title"] = "Vendas";
     ViewData["Pagina"] = "Vendas";
@@ -21,8 +20,8 @@
     </div>
 
     <div class="barra-busca">
-        <input type="text" placeholder="Buscar cliente..." />
-        <select>
+        <input type="text" id="campoBusca" placeholder="Buscar cliente..." oninput="filtrarTabela()" />
+        <select id="filtroStatus" onchange="filtrarTabela()">
             <option value="">Todos</option>
             <option value="pago">Pago</option>
             <option value="pendente">Pendente</option>
@@ -30,7 +29,7 @@
     </div>
 
     <div class="painel">
-        <table class="tabela">
+        <table class="tabela" id="tabelaVendas">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -42,16 +41,22 @@
                 </tr>
             </thead>
             <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" style="text-align:center; color:#888;">Nenhuma venda registrada.</td>
+                    </tr>
+                }
                 @foreach (var venda in Model)
                 {
                     <tr>
                         <td>#@venda.Id</td>
                         <td>@venda.ClienteNome</td>
-                        <td>R$ @venda.Valor</td>
-                        <td>@venda.Data.ToString("dd/MM/yyyy")</td>
+                        <td>R$ @venda.ValorTotal.ToString("N2")</td>
+                        <td>@(venda.DataPedido != DateTime.MinValue ? venda.DataPedido.ToString("dd/MM/yyyy") : "—")</td>
                         <td>
-                            <span class="status @(venda.Status == "Pago" ? "pago" : "pendente")">
-                                @venda.Status
+                            <span class="status @(venda.Status?.ToLower() == "pago" ? "pago" : "pendente")">
+                                @(venda.Status ?? "Pendente")
                             </span>
                         </td>
                         <td>
@@ -66,7 +71,7 @@
 
 </div>
 
-<!-- Modal de Cadastro -->
+<!-- Modal -->
 <div class="modal-overlay" id="modalVenda">
     <div class="modal">
         <div class="modal-header">
@@ -77,11 +82,6 @@
         <div class="form-grupo">
             <label>Cliente</label>
             <input type="text" placeholder="Nome do cliente" />
-        </div>
-
-        <div class="form-grupo">
-            <label>Valor</label>
-            <input type="number" placeholder="0,00" />
         </div>
 
         <div class="form-grupo">
@@ -104,13 +104,22 @@
         function abrirModal() {
             document.getElementById('modalVenda').classList.add('aberto');
         }
-
         function fecharModal() {
             document.getElementById('modalVenda').classList.remove('aberto');
         }
-
         document.getElementById('modalVenda').addEventListener('click', function (e) {
             if (e.target === this) fecharModal();
         });
+
+        function filtrarTabela() {
+            const termo = document.getElementById('campoBusca').value.toLowerCase();
+            const status = document.getElementById('filtroStatus').value.toLowerCase();
+            const linhas = document.querySelectorAll('#tabelaVendas tbody tr');
+            linhas.forEach(linha => {
+                const textoOk = linha.textContent.toLowerCase().includes(termo);
+                const statusOk = status === '' || linha.textContent.toLowerCase().includes(status);
+                linha.style.display = textoOk && statusOk ? '' : 'none';
+            });
+        }
     </script>
 }

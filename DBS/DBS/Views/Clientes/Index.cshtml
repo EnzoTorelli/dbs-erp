@@ -1,4 +1,5 @@
-﻿@{
+@model List<DBS.Models.Cliente>
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Clientes";
     ViewData["Pagina"] = "Clientes";
@@ -20,88 +21,48 @@
     </div>
 
     <div class="barra-busca">
-        <input type="text" placeholder="Buscar por nome, e-mail ou CPF..." />
-        <select>
-            <option value="">Todos os status</option>
-            <option value="ativo">Ativo</option>
-            <option value="inativo">Inativo</option>
-        </select>
+        <input type="text" id="campoBusca" placeholder="Buscar por nome, e-mail ou CPF..." oninput="filtrarTabela()" />
     </div>
 
     <div class="painel">
-        <table class="tabela">
+        <table class="tabela" id="tabelaClientes">
             <thead>
                 <tr>
                     <th>#</th>
                     <th>Nome</th>
                     <th>E-mail</th>
                     <th>Telefone</th>
-                    <th>Cidade</th>
-                    <th>Status</th>
+                    <th>CPF</th>
+                    <th>Cadastro</th>
                     <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>001</td>
-                    <td>Maria Silva</td>
-                    <td>maria@email.com</td>
-                    <td>(11) 99999-1111</td>
-                    <td>São Paulo</td>
-                    <td><span class="status ativo">Ativo</span></td>
-                    <td>
-                        <button class="btn-acao editar">Editar</button>
-                        <button class="btn-acao excluir">Excluir</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>002</td>
-                    <td>João Pereira</td>
-                    <td>joao@email.com</td>
-                    <td>(11) 99999-2222</td>
-                    <td>Campinas</td>
-                    <td><span class="status ativo">Ativo</span></td>
-                    <td>
-                        <button class="btn-acao editar">Editar</button>
-                        <button class="btn-acao excluir">Excluir</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>003</td>
-                    <td>Ana Costa</td>
-                    <td>ana@email.com</td>
-                    <td>(11) 99999-3333</td>
-                    <td>Santos</td>
-                    <td><span class="status inativo">Inativo</span></td>
-                    <td>
-                        <button class="btn-acao editar">Editar</button>
-                        <button class="btn-acao excluir">Excluir</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>004</td>
-                    <td>Carlos Lima</td>
-                    <td>carlos@email.com</td>
-                    <td>(11) 99999-4444</td>
-                    <td>Sorocaba</td>
-                    <td><span class="status ativo">Ativo</span></td>
-                    <td>
-                        <button class="btn-acao editar">Editar</button>
-                        <button class="btn-acao excluir">Excluir</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>005</td>
-                    <td>Paula Souza</td>
-                    <td>paula@email.com</td>
-                    <td>(11) 99999-5555</td>
-                    <td>Jundiaí</td>
-                    <td><span class="status ativo">Ativo</span></td>
-                    <td>
-                        <button class="btn-acao editar">Editar</button>
-                        <button class="btn-acao excluir">Excluir</button>
-                    </td>
-                </tr>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="7" style="text-align:center; color:#888;">Nenhum cliente cadastrado.</td>
+                    </tr>
+                }
+                @foreach (var cliente in Model)
+                {
+                    <tr>
+                        <td>@cliente.Id</td>
+                        <td>@cliente.Nome</td>
+                        <td>@(cliente.Email ?? "—")</td>
+                        <td>@(cliente.Telefone ?? "—")</td>
+                        <td>@(cliente.Cpf ?? "—")</td>
+                        <td>@cliente.DataCadastro.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            <button class="btn-acao editar">Editar</button>
+                            <form method="post" asp-action="Excluir" asp-route-id="@cliente.Id" style="display:inline"
+                                  onsubmit="return confirm('Excluir cliente @cliente.Nome?')">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn-acao excluir">Excluir</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
@@ -137,20 +98,6 @@
             <input type="email" placeholder="email@exemplo.com" />
         </div>
 
-        <div class="form-linha">
-            <div class="form-grupo">
-                <label>Cidade</label>
-                <input type="text" placeholder="Ex: São Paulo" />
-            </div>
-            <div class="form-grupo">
-                <label>Status</label>
-                <select>
-                    <option value="ativo">Ativo</option>
-                    <option value="inativo">Inativo</option>
-                </select>
-            </div>
-        </div>
-
         <div class="modal-footer">
             <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
             <button class="btn-salvar">Salvar Cliente</button>
@@ -163,14 +110,19 @@
         function abrirModal() {
             document.getElementById('modalCliente').classList.add('aberto');
         }
-
         function fecharModal() {
             document.getElementById('modalCliente').classList.remove('aberto');
         }
-
-        // Fecha o modal clicando fora
-        document.getElementById('modalCliente').addEventListener('click', function(e) {
+        document.getElementById('modalCliente').addEventListener('click', function (e) {
             if (e.target === this) fecharModal();
         });
+
+        function filtrarTabela() {
+            const termo = document.getElementById('campoBusca').value.toLowerCase();
+            const linhas = document.querySelectorAll('#tabelaClientes tbody tr');
+            linhas.forEach(linha => {
+                linha.style.display = linha.textContent.toLowerCase().includes(termo) ? '' : 'none';
+            });
+        }
     </script>
 }

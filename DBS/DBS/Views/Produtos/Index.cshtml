@@ -1,4 +1,5 @@
-﻿@{
+@model List<DBS.Models.Produto>
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Produtos";
     ViewData["Pagina"] = "Produtos";
@@ -20,24 +21,11 @@
     </div>
 
     <div class="barra-busca">
-        <input type="text" placeholder="Buscar por nome ou código..." />
-        <select>
-            <option value="">Todas as categorias</option>
-            <option value="eletronicos">Eletrônicos</option>
-            <option value="roupas">Roupas</option>
-            <option value="casa">Casa</option>
-            <option value="outros">Outros</option>
-        </select>
-        <select>
-            <option value="">Todos os status</option>
-            <option value="disponivel">Disponível</option>
-            <option value="indisponivel">Indisponível</option>
-            <option value="baixo-estoque">Baixo Estoque</option>
-        </select>
+        <input type="text" id="campoBusca" placeholder="Buscar por nome ou código..." oninput="filtrarTabela()" />
     </div>
 
     <div class="painel">
-        <table class="tabela">
+        <table class="tabela" id="tabelaProdutos">
             <thead>
                 <tr>
                     <th>Código</th>
@@ -50,66 +38,31 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>PRD-001</td>
-                    <td>Notebook Dell Inspiron</td>
-                    <td>Eletrônicos</td>
-                    <td>R$ 3.200,00</td>
-                    <td>12</td>
-                    <td><span class="status disponivel">Disponível</span></td>
-                    <td>
-                        <button class="btn-acao editar">Editar</button>
-                        <button class="btn-acao excluir">Excluir</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>PRD-002</td>
-                    <td>Mouse Logitech MX</td>
-                    <td>Eletrônicos</td>
-                    <td>R$ 280,00</td>
-                    <td class="estoque-baixo">3</td>
-                    <td><span class="status baixo-estoque">Baixo Estoque</span></td>
-                    <td>
-                        <button class="btn-acao editar">Editar</button>
-                        <button class="btn-acao excluir">Excluir</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>PRD-003</td>
-                    <td>Camiseta Polo</td>
-                    <td>Roupas</td>
-                    <td>R$ 89,90</td>
-                    <td>45</td>
-                    <td><span class="status disponivel">Disponível</span></td>
-                    <td>
-                        <button class="btn-acao editar">Editar</button>
-                        <button class="btn-acao excluir">Excluir</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>PRD-004</td>
-                    <td>Cadeira Ergonômica</td>
-                    <td>Casa</td>
-                    <td>R$ 1.450,00</td>
-                    <td>0</td>
-                    <td><span class="status indisponivel">Indisponível</span></td>
-                    <td>
-                        <button class="btn-acao editar">Editar</button>
-                        <button class="btn-acao excluir">Excluir</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>PRD-005</td>
-                    <td>Monitor Samsung 24"</td>
-                    <td>Eletrônicos</td>
-                    <td>R$ 1.100,00</td>
-                    <td>8</td>
-                    <td><span class="status disponivel">Disponível</span></td>
-                    <td>
-                        <button class="btn-acao editar">Editar</button>
-                        <button class="btn-acao excluir">Excluir</button>
-                    </td>
-                </tr>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="7" style="text-align:center; color:#888;">Nenhum produto cadastrado.</td>
+                    </tr>
+                }
+                @foreach (var produto in Model)
+                {
+                    <tr>
+                        <td>PRD-@produto.Id.ToString("D3")</td>
+                        <td>@produto.Nome</td>
+                        <td>@(produto.CategoriaNome ?? "—")</td>
+                        <td>R$ @produto.Preco.ToString("N2")</td>
+                        <td class="@(produto.Estoque <= 5 && produto.Estoque > 0 ? "estoque-baixo" : "")">@produto.Estoque</td>
+                        <td><span class="status @produto.StatusEstoque">@produto.StatusEstoqueLabel</span></td>
+                        <td>
+                            <button class="btn-acao editar">Editar</button>
+                            <form method="post" asp-action="Excluir" asp-route-id="@produto.Id" style="display:inline"
+                                  onsubmit="return confirm('Excluir produto @produto.Nome?')">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn-acao excluir">Excluir</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
@@ -122,23 +75,6 @@
         <div class="modal-header">
             <h2>Novo Produto</h2>
             <button class="modal-fechar" onclick="fecharModal()">×</button>
-        </div>
-
-        <div class="form-linha">
-            <div class="form-grupo">
-                <label>Código</label>
-                <input type="text" placeholder="Ex: PRD-006" />
-            </div>
-            <div class="form-grupo">
-                <label>Categoria</label>
-                <select>
-                    <option value="">Selecione...</option>
-                    <option value="eletronicos">Eletrônicos</option>
-                    <option value="roupas">Roupas</option>
-                    <option value="casa">Casa</option>
-                    <option value="outros">Outros</option>
-                </select>
-            </div>
         </div>
 
         <div class="form-grupo">
@@ -162,14 +98,6 @@
             </div>
         </div>
 
-        <div class="form-grupo">
-            <label>Status</label>
-            <select>
-                <option value="disponivel">Disponível</option>
-                <option value="indisponivel">Indisponível</option>
-            </select>
-        </div>
-
         <div class="modal-footer">
             <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
             <button class="btn-salvar">Salvar Produto</button>
@@ -182,13 +110,19 @@
         function abrirModal() {
             document.getElementById('modalProduto').classList.add('aberto');
         }
-
         function fecharModal() {
             document.getElementById('modalProduto').classList.remove('aberto');
         }
-
-        document.getElementById('modalProduto').addEventListener('click', function(e) {
+        document.getElementById('modalProduto').addEventListener('click', function (e) {
             if (e.target === this) fecharModal();
         });
+
+        function filtrarTabela() {
+            const termo = document.getElementById('campoBusca').value.toLowerCase();
+            const linhas = document.querySelectorAll('#tabelaProdutos tbody tr');
+            linhas.forEach(linha => {
+                linha.style.display = linha.textContent.toLowerCase().includes(termo) ? '' : 'none';
+            });
+        }
     </script>
 }
