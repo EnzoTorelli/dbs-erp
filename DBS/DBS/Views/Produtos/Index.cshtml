@@ -54,7 +54,7 @@
                         <td class="@(produto.Estoque <= 5 && produto.Estoque > 0 ? "estoque-baixo" : "")">@produto.Estoque</td>
                         <td><span class="status @produto.StatusEstoque">@produto.StatusEstoqueLabel</span></td>
                         <td>
-                            <button class="btn-acao editar">Editar</button>
+                            <button class="btn-acao editar" onclick="abrirModalEditar(@produto.Id)">Editar</button>
                             <form method="post" asp-action="Excluir" asp-route-id="@produto.Id" style="display:inline"
                                   onsubmit="return confirm('Excluir produto @produto.Nome?')">
                                 @Html.AntiForgeryToken()
@@ -113,7 +113,54 @@
                 <button type="submit" class="btn-salvar">Salvar Produto</button>
             </div>
         </form>
+    </div>
+</div>
 
+<!-- Modal de Edição -->
+<div class="modal-overlay" id="modalEditar">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>Editar Produto</h2>
+            <button type="button" class="modal-fechar" onclick="fecharModalEditar()">×</button>
+        </div>
+
+        <form method="post" asp-action="Atualizar">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="Id" id="editarId" />
+
+            <div class="form-grupo">
+                <label>Nome do Produto</label>
+                <input type="text" name="Nome" id="editarNome" />
+            </div>
+
+            <div class="form-grupo">
+                <label>Descrição</label>
+                <textarea name="Descricao" id="editarDescricao"></textarea>
+            </div>
+
+            <div class="form-linha">
+                <div class="form-grupo">
+                    <label>Preço (R$)</label>
+                    <input type="number" name="Preco" id="editarPreco" step="0.01" />
+                </div>
+                <div class="form-grupo">
+                    <label>Quantidade em Estoque</label>
+                    <input type="number" name="Estoque" id="editarEstoque" />
+                </div>
+            </div>
+
+            <div class="form-linha">
+                <div class="form-grupo">
+                    <label>ID da Categoria</label>
+                    <input type="number" name="IdCategoria" id="editarIdCategoria" />
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-cancelar" onclick="fecharModalEditar()">Cancelar</button>
+                <button type="submit" class="btn-salvar">Salvar Alterações</button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -127,6 +174,26 @@
         }
         document.getElementById('modalProduto').addEventListener('click', function (e) {
             if (e.target === this) fecharModal();
+        });
+
+        function abrirModalEditar(id) {
+            fetch(`/Produtos/Editar/${id}`)
+                .then(r => r.json())
+                .then(p => {
+                    document.getElementById('editarId').value          = p.id;
+                    document.getElementById('editarNome').value        = p.nome;
+                    document.getElementById('editarDescricao').value   = p.descricao ?? '';
+                    document.getElementById('editarPreco').value       = p.preco;
+                    document.getElementById('editarEstoque').value     = p.estoque;
+                    document.getElementById('editarIdCategoria').value = p.idCategoria ?? '';
+                    document.getElementById('modalEditar').classList.add('aberto');
+                });
+        }
+        function fecharModalEditar() {
+            document.getElementById('modalEditar').classList.remove('aberto');
+        }
+        document.getElementById('modalEditar').addEventListener('click', function (e) {
+            if (e.target === this) fecharModalEditar();
         });
 
         function filtrarTabela() {

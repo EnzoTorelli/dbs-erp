@@ -61,7 +61,7 @@
                             </span>
                         </td>
                         <td>
-                            <button class="btn-acao editar">Editar</button>
+                            <button class="btn-acao editar" onclick="abrirModalEditar(@ordem.Id)">Editar</button>
                             <form method="post" asp-action="Excluir" asp-route-id="@ordem.Id" style="display:inline"
                                   onsubmit="return confirm('Excluir ordem #@ordem.Id?')">
                                 @Html.AntiForgeryToken()
@@ -111,7 +111,45 @@
                 <button type="submit" class="btn-salvar">Salvar Ordem</button>
             </div>
         </form>
+    </div>
+</div>
 
+<!-- Modal de Edição -->
+<div class="modal-overlay" id="modalEditar">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>Editar Ordem</h2>
+            <button type="button" class="modal-fechar" onclick="fecharModalEditar()">×</button>
+        </div>
+
+        <form method="post" asp-action="Atualizar">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="Id" id="editarId" />
+
+            <div class="form-grupo">
+                <label>ID do Cliente</label>
+                <input type="number" name="IdCliente" id="editarIdCliente" />
+            </div>
+
+            <div class="form-grupo">
+                <label>Valor (R$)</label>
+                <input type="number" name="Valor" id="editarValor" step="0.01" />
+            </div>
+
+            <div class="form-grupo">
+                <label>Status</label>
+                <select name="Status" id="editarStatus">
+                    <option value="Pendente">Pendente</option>
+                    <option value="Pago">Pago</option>
+                    <option value="Cancelado">Cancelado</option>
+                </select>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-cancelar" onclick="fecharModalEditar()">Cancelar</button>
+                <button type="submit" class="btn-salvar">Salvar Alterações</button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -125,6 +163,24 @@
         }
         document.getElementById('modalOrdem').addEventListener('click', function (e) {
             if (e.target === this) fecharModal();
+        });
+
+        function abrirModalEditar(id) {
+            fetch(`/Ordens/Editar/${id}`)
+                .then(r => r.json())
+                .then(o => {
+                    document.getElementById('editarId').value        = o.id;
+                    document.getElementById('editarIdCliente').value = o.idCliente ?? '';
+                    document.getElementById('editarValor').value     = o.valorTotal;
+                    document.getElementById('editarStatus').value    = o.status ?? 'Pendente';
+                    document.getElementById('modalEditar').classList.add('aberto');
+                });
+        }
+        function fecharModalEditar() {
+            document.getElementById('modalEditar').classList.remove('aberto');
+        }
+        document.getElementById('modalEditar').addEventListener('click', function (e) {
+            if (e.target === this) fecharModalEditar();
         });
 
         function filtrarTabela() {

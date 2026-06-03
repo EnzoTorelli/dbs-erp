@@ -114,5 +114,35 @@ namespace DBS.Repositories
             Status = reader.IsDBNull(reader.GetOrdinal("status")) ? "Pendente" : reader.GetString("status"),
             ValorTotal = reader.GetDecimal("valor_total")
         };
+        public Pedido? GetById(int id)
+        {
+            using var conn = new MySqlConnection(_connectionString);
+            conn.Open();
+            var cmd = new MySqlCommand(@"
+        SELECT p.id, p.id_cliente, c.nome AS cliente_nome, p.data_pedido, p.status,
+               p.valor AS valor_total
+        FROM pedido p
+        LEFT JOIN cliente c ON c.id = p.id_cliente
+        WHERE p.id = @id", conn);
+            cmd.Parameters.AddWithValue("@id", id);
+            using var reader = cmd.ExecuteReader();
+            if (reader.Read())
+                return MapPedido(reader);
+            return null;
+        }
+
+        public void Update(Pedido pedido)
+        {
+            using var conn = new MySqlConnection(_connectionString);
+            conn.Open();
+            var cmd = new MySqlCommand(
+                "UPDATE pedido SET id_cliente=@idCliente, status=@status, valor=@valor WHERE id=@id",
+                conn);
+            cmd.Parameters.AddWithValue("@idCliente", pedido.IdCliente);
+            cmd.Parameters.AddWithValue("@status", pedido.Status ?? "Pendente");
+            cmd.Parameters.AddWithValue("@valor", pedido.Valor);
+            cmd.Parameters.AddWithValue("@id", pedido.Id);
+            cmd.ExecuteNonQuery();
+        }
     }
 }

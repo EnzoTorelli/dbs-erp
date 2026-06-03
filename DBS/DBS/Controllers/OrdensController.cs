@@ -34,5 +34,31 @@ namespace DBS.Controllers
             _repo.Insert(pedido);
             return RedirectToAction("Index");
         }
+        [HttpPost]
+        public IActionResult Excluir(int id)
+        {
+            _repo.Delete(id);
+            return RedirectToAction("Index");
+        }
+        [HttpGet]
+        public IActionResult Editar(int id)
+        {
+            if (HttpContext.Session.GetString("Usuario") == null)
+                return RedirectToAction("Index", "Login");
+
+            var ordem = _repo.GetById(id);
+            if (ordem == null) return RedirectToAction("Index");
+            return Json(ordem);
+        }
+
+        [HttpPost]
+        public IActionResult Atualizar(Pedido pedido)
+        {
+            if (HttpContext.Session.GetString("Usuario") == null)
+                return RedirectToAction("Index", "Login");
+
+            _repo.Update(pedido);
+            return RedirectToAction("Index");
+        }
     }
 }

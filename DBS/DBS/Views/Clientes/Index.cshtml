@@ -54,7 +54,7 @@
                         <td>@(cliente.Cpf ?? "—")</td>
                         <td>@cliente.DataCadastro.ToString("dd/MM/yyyy")</td>
                         <td>
-                            <button class="btn-acao editar">Editar</button>
+                            <button class="btn-acao editar" onclick="abrirModalEditar(@cliente.Id)">Editar</button>
                             <form method="post" asp-action="Excluir" asp-route-id="@cliente.Id" style="display:inline"
                                   onsubmit="return confirm('Excluir cliente @cliente.Nome?')">
                                 @Html.AntiForgeryToken()
@@ -74,7 +74,7 @@
     <div class="modal">
         <div class="modal-header">
             <h2>Novo Cliente</h2>
-            <button class="modal-fechar" onclick="fecharModal()">×</button>
+            <button type="button" class="modal-fechar" onclick="fecharModal()">×</button>
         </div>
 
         <form method="post" asp-action="Salvar">
@@ -106,7 +106,47 @@
                 <button type="submit" class="btn-salvar">Salvar Cliente</button>
             </div>
         </form>
+    </div>
+</div>
 
+<!-- Modal de Edição -->
+<div class="modal-overlay" id="modalEditar">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>Editar Cliente</h2>
+            <button type="button" class="modal-fechar" onclick="fecharModalEditar()">×</button>
+        </div>
+
+        <form method="post" asp-action="Atualizar">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="Id" id="editarId" />
+
+            <div class="form-grupo">
+                <label>Nome completo</label>
+                <input type="text" name="Nome" id="editarNome" />
+            </div>
+
+            <div class="form-linha">
+                <div class="form-grupo">
+                    <label>CPF</label>
+                    <input type="text" name="Cpf" id="editarCpf" />
+                </div>
+                <div class="form-grupo">
+                    <label>Telefone</label>
+                    <input type="text" name="Telefone" id="editarTelefone" />
+                </div>
+            </div>
+
+            <div class="form-grupo">
+                <label>E-mail</label>
+                <input type="email" name="Email" id="editarEmail" />
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-cancelar" onclick="fecharModalEditar()">Cancelar</button>
+                <button type="submit" class="btn-salvar">Salvar Alterações</button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -120,6 +160,25 @@
         }
         document.getElementById('modalCliente').addEventListener('click', function (e) {
             if (e.target === this) fecharModal();
+        });
+
+        function abrirModalEditar(id) {
+            fetch(`/Clientes/Editar/${id}`)
+                .then(r => r.json())
+                .then(c => {
+                    document.getElementById('editarId').value       = c.id;
+                    document.getElementById('editarNome').value     = c.nome;
+                    document.getElementById('editarCpf').value      = c.cpf ?? '';
+                    document.getElementById('editarTelefone').value = c.telefone ?? '';
+                    document.getElementById('editarEmail').value    = c.email ?? '';
+                    document.getElementById('modalEditar').classList.add('aberto');
+                });
+        }
+        function fecharModalEditar() {
+            document.getElementById('modalEditar').classList.remove('aberto');
+        }
+        document.getElementById('modalEditar').addEventListener('click', function (e) {
+            if (e.target === this) fecharModalEditar();
         });
 
         function filtrarTabela() {

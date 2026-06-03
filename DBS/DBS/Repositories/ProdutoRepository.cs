@@ -72,5 +72,47 @@ namespace DBS.Repositories
             cmd.Parameters.AddWithValue("@id", id);
             cmd.ExecuteNonQuery();
         }
+        public Produto? GetById(int id)
+        {
+            using var conn = new MySqlConnection(_connectionString);
+            conn.Open();
+            var cmd = new MySqlCommand(@"
+        SELECT p.id, p.nome, p.descricao, p.preco, p.estoque, p.id_categoria, c.nome AS categoria_nome
+        FROM produto p
+        LEFT JOIN categoria c ON c.id = p.id_categoria
+        WHERE p.id = @id", conn);
+            cmd.Parameters.AddWithValue("@id", id);
+            using var reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                return new Produto
+                {
+                    Id = reader.GetInt32("id"),
+                    Nome = reader.GetString("nome"),
+                    Descricao = reader.IsDBNull(reader.GetOrdinal("descricao")) ? null : reader.GetString("descricao"),
+                    Preco = reader.GetDecimal("preco"),
+                    Estoque = reader.GetInt32("estoque"),
+                    IdCategoria = reader.IsDBNull(reader.GetOrdinal("id_categoria")) ? null : reader.GetInt32("id_categoria"),
+                    CategoriaNome = reader.IsDBNull(reader.GetOrdinal("categoria_nome")) ? null : reader.GetString("categoria_nome")
+                };
+            }
+            return null;
+        }
+
+        public void Update(Produto produto)
+        {
+            using var conn = new MySqlConnection(_connectionString);
+            conn.Open();
+            var cmd = new MySqlCommand(
+                "UPDATE produto SET nome=@nome, descricao=@descricao, preco=@preco, estoque=@estoque, id_categoria=@idCategoria WHERE id=@id",
+                conn);
+            cmd.Parameters.AddWithValue("@nome", produto.Nome);
+            cmd.Parameters.AddWithValue("@descricao", produto.Descricao);
+            cmd.Parameters.AddWithValue("@preco", produto.Preco);
+            cmd.Parameters.AddWithValue("@estoque", produto.Estoque);
+            cmd.Parameters.AddWithValue("@idCategoria", produto.IdCategoria);
+            cmd.Parameters.AddWithValue("@id", produto.Id);
+            cmd.ExecuteNonQuery();
+        }
     }
 }
