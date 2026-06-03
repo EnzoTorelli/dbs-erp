@@ -61,7 +61,11 @@
                         </td>
                         <td>
                             <button class="btn-acao editar">Editar</button>
-                            <button class="btn-acao excluir">Excluir</button>
+                            <form method="post" asp-action="Excluir" asp-route-id="@venda.Id" style="display:inline"
+                                  onsubmit="return confirm('Excluir venda #@venda.Id?')">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn-acao excluir">Excluir</button>
+                            </form>
                         </td>
                     </tr>
                 }
@@ -76,26 +80,31 @@
     <div class="modal">
         <div class="modal-header">
             <h2>Nova Venda</h2>
-            <button class="modal-fechar" onclick="fecharModal()">×</button>
+            <button type="button" class="modal-fechar" onclick="fecharModal()">×</button>
         </div>
 
-        <div class="form-grupo">
-            <label>Cliente</label>
-            <input type="text" placeholder="Nome do cliente" />
-        </div>
+        <form method="post" asp-action="Salvar">
+            @Html.AntiForgeryToken()
 
-        <div class="form-grupo">
-            <label>Status</label>
-            <select>
-                <option value="pendente">Pendente</option>
-                <option value="pago">Pago</option>
-            </select>
-        </div>
+            <div class="form-grupo">
+                <label>ID do Cliente</label>
+                <input type="number" name="IdCliente" placeholder="Ex: 1" />
+            </div>
 
-        <div class="modal-footer">
-            <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
-            <button class="btn-salvar">Salvar Venda</button>
-        </div>
+            <div class="form-grupo">
+                <label>Status</label>
+                <select name="Status">
+                    <option value="Pendente">Pendente</option>
+                    <option value="Pago">Pago</option>
+                </select>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+                <button type="submit" class="btn-salvar">Salvar Venda</button>
+            </div>
+        </form>
+
     </div>
 </div>
 

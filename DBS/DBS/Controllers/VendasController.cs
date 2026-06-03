@@ -1,3 +1,4 @@
+using DBS.Models;
 using DBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,6 +25,26 @@ namespace DBS.Controllers
             // Reutiliza GetAll — a view pode filtrar, ou podemos trazer todos os pedidos
             var pedidos = _repo.GetAll();
             return View(pedidos);
+
+        }
+        [HttpPost]
+        public IActionResult Salvar(Pedido pedido)
+        {
+            if (HttpContext.Session.GetString("Usuario") == null)
+                return RedirectToAction("Index", "Login");
+
+            _repo.Insert(pedido);
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public IActionResult Excluir(int id)
+        {
+            if (HttpContext.Session.GetString("Usuario") == null)
+                return RedirectToAction("Index", "Login");
+
+            _repo.Delete(id);
+            return RedirectToAction("Index");
         }
     }
 }

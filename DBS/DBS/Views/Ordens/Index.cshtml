@@ -81,27 +81,32 @@
     <div class="modal">
         <div class="modal-header">
             <h2>Nova Ordem</h2>
-            <button class="modal-fechar" onclick="fecharModal()">×</button>
+            <button type="button" class="modal-fechar" onclick="fecharModal()">×</button>
         </div>
 
-        <div class="form-grupo">
-            <label>Cliente</label>
-            <input type="text" placeholder="Nome do cliente" />
-        </div>
+        <form method="post" asp-action="Salvar">
+            @Html.AntiForgeryToken()
 
-        <div class="form-grupo">
-            <label>Status</label>
-            <select>
-                <option value="pendente">Pendente</option>
-                <option value="pago">Pago</option>
-                <option value="cancelado">Cancelado</option>
-            </select>
-        </div>
+            <div class="form-grupo">
+                <label>ID do Cliente</label>
+                <input type="number" name="IdCliente" placeholder="Ex: 1" />
+            </div>
 
-        <div class="modal-footer">
-            <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
-            <button class="btn-salvar">Salvar Ordem</button>
-        </div>
+            <div class="form-grupo">
+                <label>Status</label>
+                <select name="Status">
+                    <option value="Pendente">Pendente</option>
+                    <option value="Pago">Pago</option>
+                    <option value="Cancelado">Cancelado</option>
+                </select>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+                <button type="submit" class="btn-salvar">Salvar Ordem</button>
+            </div>
+        </form>
+
     </div>
 </div>
 

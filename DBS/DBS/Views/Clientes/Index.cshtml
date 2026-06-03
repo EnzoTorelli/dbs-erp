@@ -77,31 +77,36 @@
             <button class="modal-fechar" onclick="fecharModal()">×</button>
         </div>
 
-        <div class="form-grupo">
-            <label>Nome completo</label>
-            <input type="text" placeholder="Ex: Maria Silva" />
-        </div>
+        <form method="post" asp-action="Salvar">
+            @Html.AntiForgeryToken()
 
-        <div class="form-linha">
             <div class="form-grupo">
-                <label>CPF</label>
-                <input type="text" placeholder="000.000.000-00" />
+                <label>Nome completo</label>
+                <input type="text" name="Nome" placeholder="Ex: Maria Silva" />
             </div>
+
+            <div class="form-linha">
+                <div class="form-grupo">
+                    <label>CPF</label>
+                    <input type="text" name="Cpf" placeholder="000.000.000-00" />
+                </div>
+                <div class="form-grupo">
+                    <label>Telefone</label>
+                    <input type="text" name="Telefone" placeholder="(00) 00000-0000" />
+                </div>
+            </div>
+
             <div class="form-grupo">
-                <label>Telefone</label>
-                <input type="text" placeholder="(00) 00000-0000" />
+                <label>E-mail</label>
+                <input type="email" name="Email" placeholder="email@exemplo.com" />
             </div>
-        </div>
 
-        <div class="form-grupo">
-            <label>E-mail</label>
-            <input type="email" placeholder="email@exemplo.com" />
-        </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+                <button type="submit" class="btn-salvar">Salvar Cliente</button>
+            </div>
+        </form>
 
-        <div class="modal-footer">
-            <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
-            <button class="btn-salvar">Salvar Cliente</button>
-        </div>
     </div>
 </div>
 

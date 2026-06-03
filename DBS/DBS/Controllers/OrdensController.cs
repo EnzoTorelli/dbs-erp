@@ -1,3 +1,4 @@
+using DBS.Models;
 using DBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,9 +26,12 @@ namespace DBS.Controllers
         }
 
         [HttpPost]
-        public IActionResult Excluir(int id)
+        public IActionResult Salvar(Pedido pedido)
         {
-            _repo.Delete(id);
+            if (HttpContext.Session.GetString("Usuario") == null)
+                return RedirectToAction("Index", "Login");
+
+            _repo.Insert(pedido);
             return RedirectToAction("Index");
         }
     }

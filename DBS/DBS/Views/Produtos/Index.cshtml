@@ -74,34 +74,46 @@
     <div class="modal">
         <div class="modal-header">
             <h2>Novo Produto</h2>
-            <button class="modal-fechar" onclick="fecharModal()">×</button>
+            <button type="button" class="modal-fechar" onclick="fecharModal()">×</button>
         </div>
 
-        <div class="form-grupo">
-            <label>Nome do Produto</label>
-            <input type="text" placeholder="Ex: Notebook Dell Inspiron" />
-        </div>
+        <form method="post" asp-action="Salvar">
+            @Html.AntiForgeryToken()
 
-        <div class="form-grupo">
-            <label>Descrição</label>
-            <textarea placeholder="Descreva o produto..."></textarea>
-        </div>
-
-        <div class="form-linha">
             <div class="form-grupo">
-                <label>Preço (R$)</label>
-                <input type="number" placeholder="0,00" step="0.01" />
+                <label>Nome do Produto</label>
+                <input type="text" name="Nome" placeholder="Ex: Notebook Dell Inspiron" />
             </div>
-            <div class="form-grupo">
-                <label>Quantidade em Estoque</label>
-                <input type="number" placeholder="0" />
-            </div>
-        </div>
 
-        <div class="modal-footer">
-            <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
-            <button class="btn-salvar">Salvar Produto</button>
-        </div>
+            <div class="form-grupo">
+                <label>Descrição</label>
+                <textarea name="Descricao" placeholder="Descreva o produto..."></textarea>
+            </div>
+
+            <div class="form-linha">
+                <div class="form-grupo">
+                    <label>Preço (R$)</label>
+                    <input type="number" name="Preco" placeholder="0,00" step="0.01" />
+                </div>
+                <div class="form-grupo">
+                    <label>Quantidade em Estoque</label>
+                    <input type="number" name="Estoque" placeholder="0" />
+                </div>
+            </div>
+
+            <div class="form-linha">
+                <div class="form-grupo">
+                    <label>ID da Categoria</label>
+                    <input type="number" name="IdCategoria" placeholder="Ex: 1" />
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+                <button type="submit" class="btn-salvar">Salvar Produto</button>
+            </div>
+        </form>
+
     </div>
 </div>
 
