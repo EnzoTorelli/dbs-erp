@@ -19,13 +19,11 @@ namespace DBS.Repositories
             conn.Open();
 
             var cmd = new MySqlCommand(@"
-                SELECT p.id, p.id_cliente, c.nome AS cliente_nome, p.data_pedido, p.status,
-                       COALESCE(SUM(ip.quantidade * ip.preco_unitario), 0) AS valor_total
-                FROM pedido p
-                LEFT JOIN cliente c ON c.id = p.id_cliente
-                LEFT JOIN item_pedido ip ON ip.id_pedido = p.id
-                GROUP BY p.id, p.id_cliente, c.nome, p.data_pedido, p.status
-                ORDER BY p.data_pedido DESC", conn);
+    SELECT p.id, p.id_cliente, c.nome AS cliente_nome, p.data_pedido, p.status,
+           p.valor AS valor_total
+    FROM pedido p
+    LEFT JOIN cliente c ON c.id = p.id_cliente
+    ORDER BY p.data_pedido DESC", conn);
 
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
@@ -42,14 +40,12 @@ namespace DBS.Repositories
             conn.Open();
 
             var cmd = new MySqlCommand(@"
-                SELECT p.id, p.id_cliente, c.nome AS cliente_nome, p.data_pedido, p.status,
-                       COALESCE(SUM(ip.quantidade * ip.preco_unitario), 0) AS valor_total
-                FROM pedido p
-                LEFT JOIN cliente c ON c.id = p.id_cliente
-                LEFT JOIN item_pedido ip ON ip.id_pedido = p.id
-                GROUP BY p.id, p.id_cliente, c.nome, p.data_pedido, p.status
-                ORDER BY p.data_pedido DESC
-                LIMIT @qtd", conn);
+    SELECT p.id, p.id_cliente, c.nome AS cliente_nome, p.data_pedido, p.status,
+           p.valor AS valor_total
+    FROM pedido p
+    LEFT JOIN cliente c ON c.id = p.id_cliente
+    ORDER BY p.data_pedido DESC
+    LIMIT @qtd", conn);
             cmd.Parameters.AddWithValue("@qtd", quantidade);
 
             using var reader = cmd.ExecuteReader();
@@ -74,12 +70,11 @@ namespace DBS.Repositories
             using var conn = new MySqlConnection(_connectionString);
             conn.Open();
             var cmd = new MySqlCommand(@"
-                SELECT COALESCE(SUM(ip.quantidade * ip.preco_unitario), 0)
-                FROM pedido p
-                JOIN item_pedido ip ON ip.id_pedido = p.id
-                WHERE MONTH(p.data_pedido) = MONTH(CURDATE())
-                  AND YEAR(p.data_pedido)  = YEAR(CURDATE())
-                  AND p.status = 'Pago'", conn);
+        SELECT COALESCE(SUM(valor), 0)
+        FROM pedido
+        WHERE MONTH(data_pedido) = MONTH(CURDATE())
+          AND YEAR(data_pedido)  = YEAR(CURDATE())
+          AND status = 'Pago'", conn);
             return Convert.ToDecimal(cmd.ExecuteScalar());
         }
 
@@ -88,10 +83,11 @@ namespace DBS.Repositories
             using var conn = new MySqlConnection(_connectionString);
             conn.Open();
             var cmd = new MySqlCommand(
-                "INSERT INTO pedido (id_cliente, status) VALUES (@idCliente, @status)",
+                "INSERT INTO pedido (id_cliente, status, valor) VALUES (@idCliente, @status, @valor)",
                 conn);
             cmd.Parameters.AddWithValue("@idCliente", pedido.IdCliente);
-            cmd.Parameters.AddWithValue("@status",    pedido.Status ?? "Pendente");
+            cmd.Parameters.AddWithValue("@status", pedido.Status ?? "Pendente");
+            cmd.Parameters.AddWithValue("@valor", pedido.Valor);
             cmd.ExecuteNonQuery();
         }
 
@@ -111,12 +107,12 @@ namespace DBS.Repositories
 
         private static Pedido MapPedido(MySqlDataReader reader) => new Pedido
         {
-            Id          = reader.GetInt32("id"),
-            IdCliente   = reader.IsDBNull(reader.GetOrdinal("id_cliente"))    ? null : reader.GetInt32("id_cliente"),
-            ClienteNome = reader.IsDBNull(reader.GetOrdinal("cliente_nome"))  ? "—"  : reader.GetString("cliente_nome"),
-            DataPedido  = reader.IsDBNull(reader.GetOrdinal("data_pedido"))   ? DateTime.MinValue : reader.GetDateTime("data_pedido"),
-            Status      = reader.IsDBNull(reader.GetOrdinal("status"))        ? "Pendente" : reader.GetString("status"),
-            ValorTotal  = reader.GetDecimal("valor_total")
+            Id = reader.GetInt32("id"),
+            IdCliente = reader.IsDBNull(reader.GetOrdinal("id_cliente")) ? null : reader.GetInt32("id_cliente"),
+            ClienteNome = reader.IsDBNull(reader.GetOrdinal("cliente_nome")) ? "—" : reader.GetString("cliente_nome"),
+            DataPedido = reader.IsDBNull(reader.GetOrdinal("data_pedido")) ? DateTime.MinValue : reader.GetDateTime("data_pedido"),
+            Status = reader.IsDBNull(reader.GetOrdinal("status")) ? "Pendente" : reader.GetString("status"),
+            ValorTotal = reader.GetDecimal("valor_total")
         };
     }
 }

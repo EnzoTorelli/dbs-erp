@@ -8,5 +8,6 @@ namespace DBS.Models
         public DateTime DataPedido { get; set; }
         public string? Status { get; set; }
         public decimal ValorTotal { get; set; }
+        public decimal Valor { get; set; }
     }
 }
